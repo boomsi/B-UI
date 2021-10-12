@@ -1,0 +1,47 @@
+@btnBorderRadius: 2px;
+@btnFontSize: 14px;
+@btnBgColor: #3f90f7;
+@btnBgColorHover: #40a9ff;
+@btnBgColorActive: #096dd9;
+@btnColor: #ffffff;
+@btnHeight: 32px;
+
+@smBtnFontSize: @btnFontSize;
+@smBtnHeight: @btnHeight - 8px;
+
+@lgBtnFontSize: @btnFontSize + 2px;
+@lgBtnHeight: @btnHeight + 8px;
+
+.b-btn {
+  height: @btnHeight;
+  padding: 0 round((@btnHeight - @btnFontSize) / 2 + 4px);
+  border: 0;
+  border-radius: @btnBorderRadius;
+  font-size: @btnFontSize;
+  background-color: @btnBgColor;
+  color: @btnColor;
+  transition: all .3s;
+
+  &:not([disabled]) {
+    cursor: pointer;
+
+    &:hover {
+        background-color: @btnBgColorHover
+    }
+    &:active,
+    &:focus {
+        background-color: @btnBgColorActive
+    }
+  }
+
+  &-sm {
+    height: @smBtnHeight;
+    padding: 0 round((@smBtnHeight - @smBtnFontSize) / 2 + 4px);
+    font-size: @smBtnFontSize;
+  }
+  &-lg {
+    height: @lgBtnHeight;
+    padding: 0 round((@lgBtnHeight - @lgBtnFontSize) / 2 + 4px);
+    font-size: @lgBtnFontSize;
+  }
+}
