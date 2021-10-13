@@ -1,12 +1,13 @@
 @btnBorderRadius: 2px;
-@btnFontSize: 14px;
+@btnFontSize: 16px;
 @btnBgColor: #3f90f7;
 @btnBgColorHover: #40a9ff;
 @btnBgColorActive: #096dd9;
+@btnBorderColor: #1890ff;
 @btnColor: #ffffff;
 @btnHeight: 32px;
 
-@smBtnFontSize: @btnFontSize;
+@smBtnFontSize: @btnFontSize - 2px;
 @smBtnHeight: @btnHeight - 8px;
 
 @lgBtnFontSize: @btnFontSize + 2px;
@@ -15,23 +16,32 @@
 .b-btn {
   height: @btnHeight;
   padding: 0 round((@btnHeight - @btnFontSize) / 2 + 4px);
+  box-sizing: border-box;
   border: 0;
   border-radius: @btnBorderRadius;
   font-size: @btnFontSize;
   background-color: @btnBgColor;
   color: @btnColor;
-  transition: all .3s;
+  transition: all 0.3s;
+  vertical-align: bottom;
 
   &:not([disabled]) {
     cursor: pointer;
 
-    &:hover {
-        background-color: @btnBgColorHover
-    }
-    &:active,
+    &:hover,
     &:focus {
-        background-color: @btnBgColorActive
+      background-color: @btnBgColorHover;
     }
+    &:active {
+      background-color: @btnBgColorActive;
+    }
+  }
+
+  &[disabled] {
+    background-color: #f5f5f5;
+    border: 1px solid #d9d9d9;
+    color: rgba(0, 0, 0, 0.25);
+    cursor: not-allowed;
   }
 
   &-sm {

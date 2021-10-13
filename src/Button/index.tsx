@@ -12,6 +12,7 @@ interface IButtonProps {
   text: string;
   size?: SizeType;
   style?: object;
+  loading?: boolean;
   htmlType?: ButtonType;
   onClick?: React.MouseEventHandler<HTMLElement>;
 }
@@ -19,12 +20,15 @@ interface IButtonProps {
 type ButtonProps = IButtonProps &
   Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'onClick'>;
 
-export default function Button({
-  text,
-  size = 'default',
-  className,
-  ...rest
-}: ButtonProps) {
+function Button(props: ButtonProps) {
+  const { text, size = 'default', className, onClick, ...rest } = props;
+
+  function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    const { disabled, loading } = props;
+    if (disabled || loading) return;
+    onClick?.(e);
+  }
+
   const classNames = cn(
     'b-btn',
     {
@@ -35,8 +39,14 @@ export default function Button({
   );
 
   return (
-    <button className={classNames} {...(rest as ButtonProps)}>
+    <button
+      className={classNames}
+      {...(rest as ButtonProps)}
+      onClick={handleClick}
+    >
       <span>{text}</span>
     </button>
   );
 }
+
+export default Button;

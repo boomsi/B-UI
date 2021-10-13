@@ -4,19 +4,18 @@ Demo:
 
 ```tsx
 import React from 'react';
-import { Button } from 'bui';
+import { Button } from 'boy-ui';
 
-const style = {
-  marginRight: '8px',
-};
+const mrStyle = { marginRight: '8px' };
+const mtStyle = { marginTop: '8px' };
 
 export default () => (
   <>
-    <Button style={style} text="Small" size="small" />
-    <Button style={style} text="Default" />
+    <Button style={mrStyle} text="Small" size="small" />
+    <Button style={mrStyle} text="Default" />
     <Button text="Large" size="large" />
     <br />
-    <Button text="Disabled" disabled />
+    <Button style={mtStyle} text="Disabled" disabled />
   </>
 );
 ```
