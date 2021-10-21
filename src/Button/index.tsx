@@ -11,6 +11,7 @@ type ButtonType = typeof ButtonTypes[number];
 interface IButtonProps {
   text: string;
   size?: SizeType;
+  ghost?: boolean;
   style?: object;
   loading?: boolean;
   htmlType?: ButtonType;
@@ -21,7 +22,14 @@ type ButtonProps = IButtonProps &
   Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'onClick'>;
 
 function Button(props: ButtonProps) {
-  const { text, size = 'default', className, onClick, ...rest } = props;
+  const {
+    text,
+    className,
+    size = 'default',
+    ghost = false,
+    onClick,
+    ...rest
+  } = props;
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     const { disabled, loading } = props;
@@ -34,6 +42,7 @@ function Button(props: ButtonProps) {
     {
       'b-btn-sm': size === 'small',
       'b-btn-lg': size === 'large',
+      'b-btn-ghost': ghost
     },
     className,
   );
