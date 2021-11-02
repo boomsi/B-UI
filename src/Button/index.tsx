@@ -42,7 +42,7 @@ function Button(props: ButtonProps) {
     {
       'b-btn-sm': size === 'small',
       'b-btn-lg': size === 'large',
-      'b-btn-ghost': ghost
+      'b-btn-ghost': ghost,
     },
     className,
   );
