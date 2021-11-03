@@ -1,27 +1,23 @@
-@btnBorderRadius: 2px;
-@btnFontSize: 16px;
-@btnBgColor: #3f90f7;
-@btnBgColorHover: #40a9ff;
-@btnBgColorActive: #096dd9;
-@btnBorderColor: #1890ff;
-@btnColor: #ffffff;
+@import '../_style/global.less';
+
+@default-font-size: 16px;
 @btnHeight: 32px;
 
-@smBtnFontSize: @btnFontSize - 2px;
+@smBtnFontSize: @default-font-size - 2px;
 @smBtnHeight: @btnHeight - 8px;
 
-@lgBtnFontSize: @btnFontSize + 2px;
+@lgBtnFontSize: @default-font-size + 2px;
 @lgBtnHeight: @btnHeight + 8px;
 
 .b-btn {
   height: @btnHeight;
-  padding: 0 round((@btnHeight - @btnFontSize) / 2 + 4px);
+  padding: 0 round((@btnHeight - @default-font-size) / 2 + 4px);
   box-sizing: border-box;
   border: 0;
-  border-radius: @btnBorderRadius;
-  font-size: @btnFontSize;
-  background-color: @btnBgColor;
-  color: @btnColor;
+  border-radius: @default-border-radius;
+  font-size: @default-font-size;
+  background-color: @default-color;
+  color: @default-font-color;
   transition: all 0.3s;
   vertical-align: bottom;
   cursor: pointer;
@@ -51,11 +47,11 @@
   &:not([disabled]) {
     &:not([class*='b-btn-ghost']) {
       &:hover,
-      &:focus { 
-        background-color: @btnBgColorHover;
+      &:focus {
+        background-color: @hover-color;
       }
       &:active {
-        background-color: @btnBgColorActive;
+        background-color: @active-color;
       }
     }
   }
@@ -68,12 +64,12 @@
     &:not([disabled]) {
       &:hover,
       &:focus {
-        border-color: @btnBgColorHover;
-        color: @btnBgColorHover;
+        border-color: @hover-color;
+        color: @hover-color;
       }
       &:active {
-        border-color: @btnBgColorActive;
-        color: @btnBgColorActive;
+        border-color: @active-color;
+        color: @active-color;
       }
     }
   }

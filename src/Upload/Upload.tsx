@@ -1,5 +1,7 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import Del from '@/components/del';
+import Dragger from './Dragger';
+import Button from '../Button';
 import './index.less';
 
 type uploadStatus = 'pendding' | 'fullied' | 'rejected';
@@ -11,16 +13,22 @@ interface IFile {
   url?: string;
 }
 
-interface IProps {
-  children: React.ReactElement<any>;
+interface HTTPRequestHeader {
+  [propName: string]: string;
+}
+
+export interface IUploadProp {
+  children?: React.ReactElement<HTMLElement>;
   showList?: boolean;
   defaultFileList?: IFile[];
   uploadUrl: string;
-  headers?: Headers;
+  headers?: HTTPRequestHeader;
   onChange: (err: Error | null, info: any) => void;
+  onRemove: (info: any) => void;
 }
 
-type IUpload = IProps & React.InputHTMLAttributes<HTMLInputElement>;
+type IUploadProps = IUploadProp &
+  Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>;
 
 const COLOR_DICT = {
   pendding: 'inherit',
@@ -28,14 +36,15 @@ const COLOR_DICT = {
   rejected: '#ff4d4f',
 };
 
-export default function Upload(props: IUpload) {
+function UploadBase(props: IUploadProps) {
   const {
     children,
-    showList = false,
+    showList,
     uploadUrl,
-    defaultFileList = [],
-    headers = {},
+    defaultFileList,
+    headers,
     onChange,
+    onRemove,
     ...prop
   } = props;
   const uploadRef = useRef<HTMLInputElement | null>(null);
@@ -63,7 +72,7 @@ export default function Upload(props: IUpload) {
     })
       .then((res) => res.json())
       .catch((err) => {
-        onChange(err);
+        onChange(err, null);
       })
       .then((res) => {
         onChange(null, res);
@@ -75,12 +84,12 @@ export default function Upload(props: IUpload) {
   }
 
   function removeFile(filename: string) {
-    setList(list.filter((file) => file.name !== filename));
+    onRemove(filename);
   }
 
   return (
     <div className="b-upload">
-      {React.cloneElement(children, { onClick: onClickEvent })}
+      {children && React.cloneElement(children, { onClick: onClickEvent })}
       {showList && (
         <ul className="b-upload-filelist">
           {list.map((item) => (
@@ -116,3 +125,21 @@ export default function Upload(props: IUpload) {
     </div>
   );
 }
+
+interface ICompoundedComponent
+  extends React.ForwardRefExoticComponent<IUploadProps> {
+  Dragger: typeof Dragger;
+}
+
+const Upload = UploadBase as ICompoundedComponent;
+
+Upload.defaultProps = {
+  showList: false,
+  children: <Button text="click to upload" ghost />,
+  defaultFileList: [],
+  headers: {},
+};
+
+Upload.displayName = 'Upload';
+
+export default Upload;

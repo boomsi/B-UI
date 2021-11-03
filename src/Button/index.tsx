@@ -12,7 +12,6 @@ interface IButtonProps {
   text: string;
   size?: SizeType;
   ghost?: boolean;
-  style?: object;
   loading?: boolean;
   htmlType?: ButtonType;
   onClick?: React.MouseEventHandler<HTMLElement>;
@@ -21,7 +20,7 @@ interface IButtonProps {
 type ButtonProps = IButtonProps &
   Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'onClick'>;
 
-function Button(props: ButtonProps) {
+function ButtonBase(props: ButtonProps) {
   const {
     text,
     className,
@@ -57,5 +56,18 @@ function Button(props: ButtonProps) {
     </button>
   );
 }
+
+interface IFinallyComponent
+  extends React.ForwardRefExoticComponent<ButtonProps> {}
+
+const Button = ButtonBase as IFinallyComponent;
+
+Button.defaultProps = {
+  size: 'default' as SizeType,
+  ghost: false,
+  text: 'Button',
+};
+
+Button.displayName = 'Button';
 
 export default Button;
