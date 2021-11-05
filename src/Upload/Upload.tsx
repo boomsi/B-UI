@@ -1,10 +1,16 @@
-import React, { useRef, useState } from 'react';
-import Del from '@/components/del';
+import React, { useRef, useState, useEffect } from 'react';
+import classnames from 'classnames';
+import { ChangeEvent } from 'react-dom/node_modules/@types/react';
+
+import Del from '@/_components/del';
 import Dragger from './Dragger';
 import Button from '../Button';
 import './index.less';
 
 type uploadStatus = 'pendding' | 'fullied' | 'rejected';
+type UploadType = 'drag';
+type dragState = 'dragover' | 'dragleave' | 'drop';
+
 interface IFile {
   uid?: string;
   name: string;
@@ -23,8 +29,9 @@ export interface IUploadProp {
   defaultFileList?: IFile[];
   uploadUrl: string;
   headers?: HTTPRequestHeader;
-  onChange: (err: Error | null, info: any) => void;
-  onRemove: (info: any) => void;
+  type?: UploadType;
+  onChange?: (err: Error | null, info: any) => void;
+  onRemove?: (info: any) => void;
 }
 
 type IUploadProps = IUploadProp &
@@ -36,22 +43,47 @@ const COLOR_DICT = {
   rejected: '#ff4d4f',
 };
 
+function DraggerDefault() {
+  return (
+    <div className="b-upload-dragger-default">
+      <span>＋</span>
+      <p className="test">click or drag to upload file</p>
+    </div>
+  );
+}
+
 function UploadBase(props: IUploadProps) {
   const {
-    children,
+    type,
     showList,
     uploadUrl,
     defaultFileList,
     headers,
     onChange,
     onRemove,
+    children,
     ...prop
   } = props;
+
   const uploadRef = useRef<HTMLInputElement | null>(null);
   const [list, setList] = useState(defaultFileList as IFile[]);
+  const [dragState, setDragState] = useState('' as dragState);
 
-  function onUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    const filelist = e.target.files ? [...e.target.files] : [];
+  useEffect(() => {
+    document.addEventListener('dragover', preventDefault);
+    document.addEventListener('drop', preventDefault);
+    return () => {
+      document.removeEventListener('dragover', preventDefault);
+      document.removeEventListener('drop', preventDefault);
+    };
+  }, []);
+
+  function preventDefault(e: DragEvent) {
+    e.preventDefault();
+  }
+
+  function onUpload(target: FileList | null) {
+    const filelist = target ? [...target] : [];
     const formData = new FormData();
 
     setList(
@@ -72,10 +104,10 @@ function UploadBase(props: IUploadProps) {
     })
       .then((res) => res.json())
       .catch((err) => {
-        onChange(err, null);
+        onChange?.(err, null);
       })
       .then((res) => {
-        onChange(null, res);
+        onChange?.(null, res);
       });
   }
 
@@ -84,42 +116,84 @@ function UploadBase(props: IUploadProps) {
   }
 
   function removeFile(filename: string) {
-    onRemove(filename);
+    onRemove?.(filename);
+  }
+
+  function onDragFile(e: React.DragEvent<HTMLDivElement>) {
+    setDragState(e.type as dragState);
+    if (e.type === 'drop') {
+      const filelist = e.dataTransfer.files;
+      onUpload(filelist);
+    }
+  }
+
+  function renderChildren() {
+    const child =
+      children ||
+      (type === 'drag' ? (
+        <DraggerDefault />
+      ) : (
+        <Button ghost text="click to upload" />
+      ));
+
+    const cls = classnames('b-upload-dragger', {
+      'b-upload-dragger-hover': dragState === 'dragover',
+    });
+
+    return type === 'drag' ? (
+      <div
+        className={cls}
+        onDragOver={onDragFile}
+        onDragLeave={onDragFile}
+        onDrop={onDragFile}
+        onClick={onClickEvent}
+      >
+        {child}
+      </div>
+    ) : (
+      React.cloneElement(child, { onClick: onClickEvent })
+    );
+  }
+
+  function renderList() {
+    return (
+      <ul className="b-upload-filelist">
+        {list.map((item) => (
+          <li key={item.name}>
+            <span
+              style={{
+                color: COLOR_DICT[item.status],
+              }}
+            >
+              {item.name}
+            </span>
+            <span
+              style={
+                item.status === 'rejected'
+                  ? { display: 'block', color: COLOR_DICT[item.status] }
+                  : { display: 'none' }
+              }
+              onClick={() => removeFile(item.name)}
+            >
+              <Del />
+            </span>
+          </li>
+        ))}
+      </ul>
+    );
   }
 
   return (
     <div className="b-upload">
-      {children && React.cloneElement(children, { onClick: onClickEvent })}
-      {showList && (
-        <ul className="b-upload-filelist">
-          {list.map((item) => (
-            <li key={item.name}>
-              <span
-                style={{
-                  color: COLOR_DICT[item.status],
-                }}
-              >
-                {item.name}
-              </span>
-              <span
-                style={
-                  item.status === 'rejected'
-                    ? { display: 'block', color: COLOR_DICT[item.status] }
-                    : { display: 'none' }
-                }
-                onClick={() => removeFile(item.name)}
-              >
-                <Del />
-              </span>
-            </li>
-          ))}
-        </ul>
-      )}
+      {renderChildren()}
+      {showList && renderList()}
       <input
         {...prop}
         type="file"
         style={{ display: 'none' }}
-        onChange={onUpload}
+        onChange={(e: ChangeEvent<HTMLInputElement>) =>
+          onUpload(e.target.files)
+        }
         ref={uploadRef}
       />
     </div>
@@ -135,7 +209,6 @@ const Upload = UploadBase as ICompoundedComponent;
 
 Upload.defaultProps = {
   showList: false,
-  children: <Button text="click to upload" ghost />,
   defaultFileList: [],
   headers: {},
 };

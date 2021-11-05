@@ -1,36 +1,15 @@
 import React from 'react';
+
 import Upload, { IUploadProp } from './Upload';
 
-type IDraggerInterface = IUploadProp & {};
+type IDraggerProps = Omit<IUploadProp, 'type'>;
 
-function DraggerDefault() {
-  return (
-    <div className="b-upload-dragger-default">
-      <span>＋</span>
-      <p>click or drag to upload file</p>
-    </div>
-  );
+function Dragger(props: IDraggerProps) {
+  return <Upload {...props} type="drag" />;
 }
 
-function DraggerBase(props: IDraggerInterface) {
-  const { onChange, children, ...prop } = props;
+interface InterDragger extends React.ForwardRefExoticComponent<IUploadProp> {}
 
-  return (
-    <Upload onChange={onChange} {...prop}>
-      <div className="b-upload-dragger">{children}</div>
-    </Upload>
-  );
-}
-
-interface InterDragger
-  extends React.ForwardRefExoticComponent<IDraggerInterface> {}
-
-const Dragger = DraggerBase as InterDragger;
-
-Dragger.displayName = 'Dragger';
-
-Dragger.defaultProps = {
-  children: <DraggerDefault />,
-};
+(Dragger as InterDragger).displayName = 'Dragger';
 
 export default Dragger;

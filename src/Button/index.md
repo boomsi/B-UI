@@ -23,7 +23,7 @@ export default () => (
 Ghost:
 
 ```tsx
-import React from 'react'
+import React from 'react';
 import { Button } from 'boy-ui';
 
 const mrStyle = { marginRight: '8px' };
@@ -34,10 +34,10 @@ export default () => (
     <Button style={mrStyle} text="Small" size="small" ghost />
     <Button style={mrStyle} text="Default" ghost />
     <Button text="Large" size="large" ghost />
-     <br />
+    <br />
     <Button style={mtStyle} text="Disabled" disabled ghost />
   </>
 );
 ```
 
-More skills for writing demo: https://d.umijs.org/guide/basic#write-component-demo
+More skills for writing demo: https://github.com/boomsi/B-UI

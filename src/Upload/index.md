@@ -53,7 +53,7 @@ export default () => {
   return (
     <Upload
       uploadUrl="http://www.example.com"
-      name="upload1"
+      name="upload2"
       showList
       multiple
       defaultFileList={filelist}
@@ -72,7 +72,20 @@ import React from 'react';
 import { Upload } from 'boy-ui';
 const { Dragger } = Upload;
 
-export default () => <Dragger showList />;
+export default () => {
+  function onChange(file) {
+    console.log(file);
+  }
+
+  return (
+    <Dragger
+      name="upload3"
+      uploadUrl="http://www.example.com"
+      onChange={onChange}
+      showList
+    />
+  );
+};
 ```
 
-More skills for writing demo: https://d.umijs.org/guide/basic#write-component-demo
+More skills for writing demo: https://github.com/boomsi/B-UI
