@@ -13,7 +13,12 @@ npm install boy-ui -S
 yarn add boy-ui
 ```
 
-## Detail
+## Components
 
-Learn from the design of [Ant-Design](https://www.npmjs.com/package/antd).
+1. Button
 
+2. Upload / Dragger
+
+## Design
+
+Color design refer to Ant-Design.
