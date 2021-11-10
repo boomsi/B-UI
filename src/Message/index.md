@@ -10,9 +10,9 @@ export default () => {
   const btnStyle = { marginRight: 8 };
 
   function onClickFunc(type) {
-    message({
-      message: `Message ${type} !!!`,
-      type,
+    message[type]({
+      content: `message ${type} !!!`,
+      duration: 2000,
     });
   }
 

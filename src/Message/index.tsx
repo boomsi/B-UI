@@ -3,28 +3,65 @@ import './index.less';
 type IMessageType = 'error' | 'info' | 'success' | 'warn';
 
 interface IMessageProps {
-  message: string;
+  content: string;
+  duration: number;
+  onClose?: () => void;
   type: IMessageType;
-  interval: number;
 }
 
-function message({ message, type = 'info', interval = 3000 }: IMessageProps) {
-  let oWrapper: Element = document.getElementsByClassName('b-message')?.[0];
-  const oSpan = document.createElement('span');
-  oSpan.innerHTML = `<i class='b-message-${type}'></i> ${message}`;
+class MessageUsual {
+  private wrapper: Element | null = null;
 
-  if (oWrapper) {
-    oWrapper.append(oSpan);
-  } else {
-    oWrapper = document.createElement('div');
+  appendWrapper() {
+    const oWrapper = document.createElement('div');
     oWrapper.className = 'b-message';
-    oWrapper.append(oSpan);
     document.body.append(oWrapper);
+    this.wrapper = oWrapper;
   }
 
-  setTimeout(() => {
-    oWrapper.removeChild(oSpan);
-  }, interval);
+  appendItem({
+    type = 'info',
+    content,
+    duration = 3000,
+    onClose,
+  }: IMessageProps) {
+    if (!this.wrapper) this.appendWrapper();
+
+    const oSpan = document.createElement('span');
+    oSpan.innerHTML = `<i class='b-message-${type}'></i> ${content}`;
+    this.wrapper!.append(oSpan);
+    this.removeItem(oSpan, duration, onClose);
+  }
+
+  removeItem(
+    target: Element,
+    duration: IMessageProps['duration'],
+    onClose: IMessageProps['onClose'],
+  ) {
+    setTimeout(() => {
+      this.wrapper!.removeChild(target);
+      onClose?.();
+    }, duration);
+  }
+
+  usual(type: IMessageType) {
+    return (query: Omit<IMessageProps, 'type'>) => {
+      this.appendItem({ ...query, type });
+    };
+  }
 }
+
+class Message extends MessageUsual {
+  constructor() {
+    super();
+  }
+
+  info = super.usual('info');
+  success = super.usual('success');
+  error = super.usual('error');
+  warn = super.usual('warn');
+}
+
+const message = new Message();
 
 export default message;
