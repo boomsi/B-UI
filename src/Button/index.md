@@ -40,4 +40,23 @@ export default () => (
 );
 ```
 
+Loading:
+
+```tsx
+import React from 'react';
+import { Button } from 'boy-ui';
+
+const mrStyle = { marginRight: '8px' };
+const mtStyle = { marginTop: '8px' };
+
+export default () => (
+  <>
+    <Button style={mrStyle} text="Loading" loading />
+    <Button ghost text="Loading" loading />
+  </>
+);
+```
+
+<API></API>
+
 More skills for writing demo: https://github.com/boomsi/B-UI

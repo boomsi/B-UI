@@ -88,4 +88,8 @@ export default () => {
 };
 ```
 
+<API src='./Upload.tsx'></API>
+
+<!-- <API src='./Dragger.tsx'></API> -->
+
 More skills for writing demo: https://github.com/boomsi/B-UI

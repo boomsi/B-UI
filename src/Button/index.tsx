@@ -1,34 +1,31 @@
 import React from 'react';
 import cn from 'classnames';
-import { tuple } from '@/_util/type';
+import Loading from '../_components/Loading';
 import './index.less';
 
-const SizeTypes = tuple('small', 'default', 'large');
-const ButtonTypes = tuple('submit', 'button', 'reset');
-type SizeType = typeof SizeTypes[number];
-type ButtonType = typeof ButtonTypes[number];
+type SizeType = 'small' | 'default' | 'large';
+type ButtonType = 'submit' | 'button' | 'reset';
 
-interface IButtonProps {
+export interface IButtonProps {
+  /** 按钮文本 */
   text: string;
+  /** 按钮尺寸 */
   size?: SizeType;
+  /** 背景色是否透明 */
   ghost?: boolean;
+  /** 按钮加载状态 */
   loading?: boolean;
+  /** button 原生 type 值 */
   htmlType?: ButtonType;
+  /** 点击事件 */
   onClick?: React.MouseEventHandler<HTMLElement>;
 }
 
 type ButtonProps = IButtonProps &
   Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'onClick'>;
 
-function ButtonBase(props: ButtonProps) {
-  const {
-    text,
-    className,
-    size = 'default',
-    ghost = false,
-    onClick,
-    ...rest
-  } = props;
+const Button: React.FC<ButtonProps> = (props) => {
+  const { text, className, size, ghost, loading, onClick, ...rest } = props;
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     const { disabled, loading } = props;
@@ -52,20 +49,17 @@ function ButtonBase(props: ButtonProps) {
       {...(rest as ButtonProps)}
       onClick={handleClick}
     >
+      {loading && <Loading color={ghost ? '#555' : '#FFF'} />}
       <span>{text}</span>
     </button>
   );
-}
-
-interface IFinallyComponent
-  extends React.ForwardRefExoticComponent<ButtonProps> {}
-
-const Button = ButtonBase as IFinallyComponent;
+};
 
 Button.defaultProps = {
-  size: 'default' as SizeType,
+  size: 'default',
   ghost: false,
   text: 'Button',
+  loading: false,
 };
 
 Button.displayName = 'Button';

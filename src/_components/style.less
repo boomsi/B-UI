@@ -1,3 +1,5 @@
+@import '../_style/global.less';
+
 .b-icon-del {
   line-height: inherit;
   font-size: 20px;
@@ -7,5 +9,32 @@
   display: inline-block;
   &:hover {
     color: #5ba8f8;
+  }
+}
+
+.b-icon-loading {
+  display: inline-block;
+  margin-right: 8px;
+  width: 4px;
+  height: 4px;
+  vertical-align: middle;
+  border: 6px solid @icon-background-color;
+  border-right-color: transparent !important;
+  border-radius: 50%;
+
+  transform-origin: center;
+  animation-name: b-loading;
+  animation-duration: 1s;
+  animation-direction: normal;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes b-loading {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }

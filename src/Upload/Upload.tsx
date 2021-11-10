@@ -24,17 +24,25 @@ interface HTTPRequestHeader {
 }
 
 export interface IUploadProp {
+  /** 穿法上传的子组件 */
   children?: React.ReactElement<HTMLElement>;
+  /** 展示已上传文件列表 */
   showList?: boolean;
+  /** 文件列表 */
   defaultFileList?: IFile[];
+  /** 上传文件 API 接口地址 */
   uploadUrl: string;
+  /** 上传文件 HTTP header */
   headers?: HTTPRequestHeader;
+  /** 上传类型 */
   type?: UploadType;
+  /** 上传成功或失败回调函数 */
   onChange?: (err: Error | null, info: any) => void;
+  /** 点击移除列表回调函数 */
   onRemove?: (info: any) => void;
 }
 
-type IUploadProps = IUploadProp &
+export type IUploadProps = IUploadProp &
   Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>;
 
 const COLOR_DICT = {
@@ -52,7 +60,7 @@ function DraggerDefault() {
   );
 }
 
-function UploadBase(props: IUploadProps) {
+const UploadBase: React.FC<IUploadProps> = (props) => {
   const {
     type,
     showList,
@@ -198,14 +206,13 @@ function UploadBase(props: IUploadProps) {
       />
     </div>
   );
-}
+};
 
-interface ICompoundedComponent
-  extends React.ForwardRefExoticComponent<IUploadProps> {
+const Upload = UploadBase as React.FC<IUploadProps> & {
   Dragger: typeof Dragger;
-}
+};
 
-const Upload = UploadBase as ICompoundedComponent;
+Upload.Dragger = Dragger;
 
 Upload.defaultProps = {
   showList: false,

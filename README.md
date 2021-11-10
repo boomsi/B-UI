@@ -1,7 +1,6 @@
 # boy-ui
 
-An ui component for test.
-Just a boy.
+An ui component.
 
 ## Install
 
@@ -16,8 +15,8 @@ yarn add boy-ui
 ## Components
 
 1. Button
-
 2. Upload / Dragger
+3. message
 
 ## Design
 
