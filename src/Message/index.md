@@ -39,4 +39,12 @@ export default () => {
 };
 ```
 
+## API
+
+| Name     | Description      | Type         | Default |
+| -------- | ---------------- | ------------ | ------- |
+| content  | 消息内容         | `string`     | `--`    |
+| duration | 消息显示时间     | `number`     | `2000`  |
+| onClose  | 消息关闭回调函数 | `() => void` | `--`    |
+
 More skills for writing demo: https://github.com/boomsi/B-UI

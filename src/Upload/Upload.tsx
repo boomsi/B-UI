@@ -24,7 +24,7 @@ interface HTTPRequestHeader {
 }
 
 export interface IUploadProp {
-  /** 穿法上传的子组件 */
+  /** 触发上传的子组件 */
   children?: React.ReactElement<HTMLElement>;
   /** 展示已上传文件列表 */
   showList?: boolean;
