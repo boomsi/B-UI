@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import classnames from 'classnames';
 import { ChangeEvent } from 'react-dom/node_modules/@types/react';
 
-import Del from '@/_components/del';
+import Del from '../_components/Del';
 import Dragger from './Dragger';
 import Button from '../Button';
 import './index.less';
