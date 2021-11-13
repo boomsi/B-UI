@@ -50,6 +50,7 @@
     "react": "^16.12.0 || ^17.0.0"
   },
   "devDependencies": {
+    "@types/classnames": "^2.3.1",
     "@umijs/test": "^3.0.5",
     "dumi": "^1.0.17",
     "father-build": "^1.17.2",
