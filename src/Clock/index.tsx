@@ -1,75 +1,81 @@
 import React, { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
+import { v4 as uuidv4 } from 'uuid';
+
 import './index.less';
 
-interface IClockProps {
+interface ICricle {
+  radius: number;
+  borderWidth: number;
+  borderColor: string;
+  backgroundColor: string;
+}
+
+interface IScale {
+  long: number;
+  color: string;
   width: number;
-  height: number;
-  outer: {
-    radius: number;
-    borderWidth: number;
-    borderColor: string;
-    backgroundColor: string;
-  };
-  inner: {
-    radius: number;
-    borderWidth: number;
-    borderColor: string;
-    backgroundColor: string;
-  };
-  scale: {
-    long: number;
-    color: string;
-    width: number;
-  };
-  smallScale: {
-    long: number;
-    color: string;
-    width: number;
-  };
-  hourHand: {
-    long: number;
-    width: number;
-    color: string;
-  };
-  minuteHand: {
-    long: number;
-    width: number;
-    color: string;
-  };
-  secondHand: {
-    long: number;
-    width: number;
-    color: string;
-  };
-  cricleCenter: {
+}
+
+interface IClockProps {
+  /** svg 占据宽度 */
+  width?: number;
+  /** svg 占据高度 */
+  height?: number;
+  /** svg 外圆属性 */
+  outer?: ICricle;
+  /** svg 内圆属性 */
+  inner?: ICricle;
+  /** 大刻度 */
+  hourScale?: IScale & { show?: boolean };
+  /** 中刻度 */
+  minuteScale?: IScale & { show?: boolean };
+  /** 小刻度 */
+  secondScale?: IScale & { show?: boolean };
+  /** 时针 */
+  hourHand?: IScale;
+  /** 分针 */
+  minuteHand?: IScale;
+  /** 秒针 */
+  secondHand?: IScale;
+  /** 圆心 */
+  cricleCenter?: {
     radius: number;
     backgroundColor: string;
   };
 }
 
-const Clock: React.FC<IClockProps> = function (props) {
+const Clock: React.FC<IClockProps & typeof defaultProps> = function (props) {
   const {
     width,
     height,
     outer,
     inner,
-    scale,
-    smallScale,
+    hourScale,
+    minuteScale,
+    secondScale,
     cricleCenter,
     hourHand,
     minuteHand,
     secondHand,
   } = props;
-  const circleBorderWidth = outer.radius - inner.radius;
   const [now, setNow] = useState([0, 0, 0]);
+  const id = uuidv4();
+  const symbolId = {
+    hour: `hour-scale-${id}`,
+    minute: `minute-scale-${id}`,
+    second: `second-scale-${id}`,
+  };
 
-  const hourScale = {
-    x1: width / 2,
+  const centerPosition = { x: width / 2, y: height / 2 };
+  const circleBorderWidth = outer.radius - inner.radius;
+  const hourScaleAttr = {
+    x1: centerPosition.x,
     y1: circleBorderWidth,
-    x2: width / 2,
-    y2: circleBorderWidth + scale.long,
-    style: { stroke: scale.color, strokeWidth: scale.width },
+    x2: centerPosition.x,
+    y2: circleBorderWidth + hourScale.long,
+    stroke: hourScale.color,
+    strokeWidth: hourScale.width,
   };
 
   const xFunc = (range: number) =>
@@ -78,14 +84,14 @@ const Clock: React.FC<IClockProps> = function (props) {
   const yFunc = (range: number) =>
     outer.radius + inner.radius * Math.sin((range * Math.PI) / 180);
 
-  const minuteScale = {
+  const scaleAttr = {
     x1: xFunc,
     y1: yFunc,
     x2: xFunc,
     y2: yFunc,
-    style: (range: number): object => ({
-      stroke: smallScale.color,
-      strokeWidth: smallScale.width,
+    style: (range: number, attr: IScale): object => ({
+      stroke: attr.color,
+      strokeWidth: attr.width,
       transform: `rotate(${range}deg)`,
       transformOrigin: 'bottom center',
       transformBox: 'fill-box',
@@ -111,22 +117,36 @@ const Clock: React.FC<IClockProps> = function (props) {
   }deg)`;
   const secondRange = `rotate(${(now[2] * 360) / 60}deg)`;
 
+  function nowTime() {
+    const hour = dayjs().hour();
+    const minute = dayjs().minute();
+    const second = dayjs().second();
+    setNow([hour, minute, second]);
+  }
+
+  function loopUpdate() {
+    setTimeout(() => {
+      nowTime();
+      loopUpdate();
+    }, 1000);
+  }
+
   useEffect(() => {
-    nowTime(null);
+    nowTime();
+    loopUpdate();
   }, []);
 
-  function nowTime(lastTimer: any) {
-    //   FIXME requestAnimationFrame ?
-    if (lastTimer) {
-      clearTimeout(lastTimer);
-    }
-    const timer = setTimeout(() => {
-      const hour = dayjs().hour();
-      const minute = dayjs().minute();
-      const second = dayjs().second();
-      setNow([hour, minute, second]);
-      nowTime(timer);
-    }, 1000);
+  function renderItem(range: number, id: string) {
+    const count = 360 / range;
+    return Array.from(new Array(count), (x, n) => n).map((n: number) => (
+      <use
+        key={n}
+        xlinkHref={`#${id}`}
+        transform={`rotate(${n * range} ${centerPosition.x} ${
+          centerPosition.y
+        })`}
+      ></use>
+    ));
   }
 
   return (
@@ -138,93 +158,86 @@ const Clock: React.FC<IClockProps> = function (props) {
         height={height}
       >
         <circle
-          cx={width / 2}
-          cy={height / 2}
+          cx={centerPosition.x}
+          cy={centerPosition.y}
           r={outer.radius - outer.borderWidth / 2}
           stroke={outer.borderColor}
           strokeWidth={outer.borderWidth}
           fill={outer.backgroundColor}
         ></circle>
         <circle
-          cx={width / 2}
-          cy={height / 2}
+          cx={centerPosition.x}
+          cy={centerPosition.y}
           r={inner.radius - inner.borderWidth / 2}
           stroke={inner.borderColor}
           strokeWidth={inner.borderWidth}
           fill={inner.backgroundColor}
         ></circle>
 
-        <defs>
-          <g id="hour-scale">
+        <symbol>
+          <line id={symbolId.hour} {...hourScaleAttr} />
+
+          <g id={symbolId.minute}>
             <line
-              x1={hourScale.x1}
-              y1={hourScale.y1}
-              x2={hourScale.x2}
-              y2={hourScale.y2}
-              style={hourScale.style}
+              x1={scaleAttr.x1(120)}
+              y1={scaleAttr.y1(120)}
+              x2={scaleAttr.x2(120)}
+              y2={scaleAttr.y2(120) - minuteScale.long}
+              style={scaleAttr.style(30, minuteScale)}
+            />
+            <line
+              x1={scaleAttr.x1(150)}
+              y1={scaleAttr.y1(150)}
+              x2={scaleAttr.x2(150)}
+              y2={scaleAttr.y2(150) - minuteScale.long}
+              style={scaleAttr.style(60, minuteScale)}
             />
           </g>
-        </defs>
 
-        <use
-          xlinkHref="#hour-scale"
-          transform={`rotate(90 ${width / 2} ${height / 2})`}
-        ></use>
-        <use
-          xlinkHref="#hour-scale"
-          transform={`rotate(180 ${width / 2} ${height / 2})`}
-        ></use>
-        <use
-          xlinkHref="#hour-scale"
-          transform={`rotate(270 ${width / 2} ${height / 2})`}
-        ></use>
-        <use
-          xlinkHref="#hour-scale"
-          transform={`rotate(360 ${width / 2} ${height / 2})`}
-        ></use>
-
-        <defs>
-          <g id="minute-scale">
+          <g id={symbolId.second}>
             <line
-              x1={minuteScale.x1(120)}
-              y1={minuteScale.y1(120)}
-              x2={minuteScale.x2(120)}
-              y2={minuteScale.y2(120) - smallScale.long}
-              style={minuteScale.style(30)}
+              x1={scaleAttr.x1(6)}
+              y1={scaleAttr.y1(6)}
+              x2={scaleAttr.x2(6)}
+              y2={scaleAttr.y2(6) - secondScale.long}
+              style={scaleAttr.style(276, secondScale)}
             />
             <line
-              x1={minuteScale.x1(150)}
-              y1={minuteScale.y1(150)}
-              x2={minuteScale.x2(150)}
-              y2={minuteScale.y2(150) - smallScale.long}
-              style={minuteScale.style(60)}
+              x1={scaleAttr.x1(12)}
+              y1={scaleAttr.y1(12)}
+              x2={scaleAttr.x2(12)}
+              y2={scaleAttr.y2(12) - secondScale.long}
+              style={scaleAttr.style(282, secondScale)}
+            />
+            <line
+              x1={scaleAttr.x1(18)}
+              y1={scaleAttr.y1(18)}
+              x2={scaleAttr.x2(18)}
+              y2={scaleAttr.y2(18) - secondScale.long}
+              style={scaleAttr.style(288, secondScale)}
+            />
+            <line
+              x1={scaleAttr.x1(24)}
+              y1={scaleAttr.y1(24)}
+              x2={scaleAttr.x2(24)}
+              y2={scaleAttr.y2(24) - secondScale.long}
+              style={scaleAttr.style(294, secondScale)}
             />
           </g>
-        </defs>
+        </symbol>
 
-        <use
-          xlinkHref="#minute-scale"
-          transform={`rotate(90 ${width / 2} ${height / 2})`}
-        ></use>
-        <use
-          xlinkHref="#minute-scale"
-          transform={`rotate(180 ${width / 2} ${height / 2})`}
-        ></use>
-        <use
-          xlinkHref="#minute-scale"
-          transform={`rotate(270 ${width / 2} ${height / 2})`}
-        ></use>
-        <use
-          xlinkHref="#minute-scale"
-          transform={`rotate(360 ${width / 2} ${height / 2})`}
-        ></use>
+        {hourScale.show && renderItem(90, symbolId.hour)}
 
-        {/* 秒针 */}
+        {minuteScale.show && renderItem(90, symbolId.minute)}
+
+        {secondScale.show && renderItem(30, symbolId.second)}
+
+        {/* second */}
         <line
-          x1={width / 2}
-          y1={height / 2}
-          x2={width / 2}
-          y2={secondHand.long}
+          x1={centerPosition.x}
+          y1={centerPosition.y}
+          x2={centerPosition.x}
+          y2={centerPosition.y - secondHand.long}
           stroke={secondHand.color}
           strokeWidth={secondHand.width}
           style={{
@@ -233,12 +246,12 @@ const Clock: React.FC<IClockProps> = function (props) {
             transform: secondRange,
           }}
         />
-        {/* 分针 */}
+        {/* minute */}
         <line
-          x1={width / 2}
-          y1={height / 2}
-          x2={width / 2}
-          y2={minuteHand.long}
+          x1={centerPosition.x}
+          y1={centerPosition.y}
+          x2={centerPosition.x}
+          y2={centerPosition.y - minuteHand.long}
           stroke={minuteHand.color}
           strokeWidth={minuteHand.width}
           style={{
@@ -247,12 +260,12 @@ const Clock: React.FC<IClockProps> = function (props) {
             transform: minuteRange,
           }}
         />
-        {/* 时针 */}
+        {/* hour */}
         <line
-          x1={width / 2}
-          y1={height / 2}
-          x2={width / 2}
-          y2={hourHand.long}
+          x1={centerPosition.x}
+          y1={centerPosition.y}
+          x2={centerPosition.x}
+          y2={centerPosition.y - hourHand.long}
           stroke={hourHand.color}
           strokeWidth={hourHand.width}
           style={{
@@ -262,10 +275,10 @@ const Clock: React.FC<IClockProps> = function (props) {
           }}
         />
 
-        {/* 圆心 */}
+        {/* center */}
         <circle
-          cx={width / 2}
-          cy={height / 2}
+          cx={centerPosition.x}
+          cy={centerPosition.y}
           r={cricleCenter.radius}
           fill={cricleCenter.backgroundColor}
         />
@@ -274,9 +287,9 @@ const Clock: React.FC<IClockProps> = function (props) {
   );
 };
 
-// FIXME 宽度 = 半径 + 一边的边框
+// width = radius + 1/2 borderWidth
 
-Clock.defaultProps = {
+const defaultProps = {
   width: 216,
   height: 216,
   outer: {
@@ -291,35 +304,45 @@ Clock.defaultProps = {
     borderColor: '#e5e5e5',
     backgroundColor: '#eee',
   },
-  scale: {
+  hourScale: {
     long: 10,
     color: '#8c8c8c',
     width: 2,
+    show: true,
   },
-  smallScale: {
+  minuteScale: {
     long: 5,
     color: '#8c8c8c',
     width: 2,
+    show: true,
+  },
+  secondScale: {
+    long: 2,
+    color: '#8c8c8c',
+    width: 2,
+    show: false,
   },
   hourHand: {
     long: 50,
     width: 2,
-    color: '#f40',
+    color: '#8c8c8c',
   },
   minuteHand: {
     long: 60,
     width: 2,
-    color: '#38f',
+    color: '#8c8c8c',
   },
   secondHand: {
     long: 70,
     width: 2,
-    color: '#e3d4a1',
+    color: '#8c8c8c',
   },
   cricleCenter: {
     radius: 6,
     backgroundColor: '#999',
   },
 };
+
+Clock.defaultProps = defaultProps;
 
 export default Clock;
