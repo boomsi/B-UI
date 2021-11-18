@@ -17,6 +17,7 @@ yarn add boy-ui
 1. Button
 2. Upload / Dragger
 3. message
+4. Clock
 
 ## Design
 
