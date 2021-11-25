@@ -290,16 +290,16 @@ const Clock: React.FC<IClockProps & typeof defaultProps> = function (props) {
 // width = radius + 1/2 borderWidth
 
 const defaultProps = {
-  width: 216,
-  height: 216,
+  width: 136,
+  height: 136,
   outer: {
-    radius: 108,
+    radius: 68,
     borderWidth: 2,
     borderColor: '#e5e5e5',
     backgroundColor: '#eee',
   },
   inner: {
-    radius: 100,
+    radius: 60,
     borderWidth: 2,
     borderColor: '#e5e5e5',
     backgroundColor: '#eee',
@@ -323,17 +323,17 @@ const defaultProps = {
     show: false,
   },
   hourHand: {
-    long: 50,
+    long: 30,
     width: 2,
     color: '#8c8c8c',
   },
   minuteHand: {
-    long: 60,
+    long: 40,
     width: 2,
     color: '#8c8c8c',
   },
   secondHand: {
-    long: 70,
+    long: 50,
     width: 2,
     color: '#8c8c8c',
   },

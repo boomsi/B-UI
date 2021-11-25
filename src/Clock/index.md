@@ -92,16 +92,16 @@ import React from 'react';
 import { Clock } from 'boy-ui';
 
 const attr1 = {
-  width: 256,
-  height: 256,
+  width: 216,
+  height: 216,
   outer: {
-    radius: 128,
+    radius: 108,
     borderWidth: 2,
     borderColor: '#e5e5e5',
     backgroundColor: '#eee',
   },
   inner: {
-    radius: 120,
+    radius: 100,
     borderWidth: 2,
     borderColor: '#e5e5e5',
     backgroundColor: '#eee',
@@ -125,18 +125,18 @@ const attr1 = {
     show: false,
   },
   hourHand: {
-    long: 70,
+    long: 50,
     width: 2,
     color: 'red',
     show: true,
   },
   minuteHand: {
-    long: 80,
+    long: 60,
     width: 2,
     color: 'green',
   },
   secondHand: {
-    long: 110,
+    long: 70,
     width: 2,
     color: 'blue',
   },
