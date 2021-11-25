@@ -17,6 +17,8 @@ export interface IButtonProps {
   loading?: boolean;
   /** button 原生 type 值 */
   htmlType?: ButtonType;
+  /** 防抖(ms) */
+  debounce?: number;
   /** 点击事件 */
   onClick?: React.MouseEventHandler<HTMLElement>;
 }
@@ -25,7 +27,22 @@ type ButtonProps = IButtonProps &
   Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'onClick'>;
 
 const Button: React.FC<ButtonProps> = (props) => {
-  const { text, className, size, ghost, loading, onClick, ...rest } = props;
+  const { text, className, size, ghost, loading, debounce, onClick, ...rest } =
+    props;
+
+  // 默认值为0 实际存在4ms的间隔
+  function debounceFunc(fn: Function) {
+    let timer: null | number = null;
+
+    return function () {
+      if (timer) return;
+      fn.apply(null, arguments);
+
+      timer = window.setTimeout(() => {
+        timer = null;
+      }, debounce);
+    };
+  }
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     const { disabled, loading } = props;
@@ -47,7 +64,7 @@ const Button: React.FC<ButtonProps> = (props) => {
     <button
       className={classNames}
       {...(rest as ButtonProps)}
-      onClick={handleClick}
+      onClick={debounceFunc(handleClick)}
     >
       {loading && <Loading color={ghost ? '#555' : '#FFF'} />}
       <span>{text}</span>
@@ -60,6 +77,7 @@ Button.defaultProps = {
   ghost: false,
   text: 'Button',
   loading: false,
+  debounce: 0,
 };
 
 Button.displayName = 'Button';

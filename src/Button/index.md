@@ -57,6 +57,27 @@ export default () => (
 );
 ```
 
+Debounce:
+
+```tsx
+import React from 'react';
+import { Button, message } from 'boy-ui';
+
+const mrStyle = { marginRight: '8px' };
+
+export default () => (
+  <Button
+    text="Debounce 1000ms"
+    debounce={1000}
+    onClick={() => {
+      message.info({
+        content: 'message ...',
+      });
+    }}
+  />
+);
+```
+
 <API></API>
 
 More skills for writing demo: https://github.com/boomsi/B-UI
