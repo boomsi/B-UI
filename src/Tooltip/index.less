@@ -1,0 +1,78 @@
+@import '../_style/global.less';
+
+.b-tooltip {
+  display: inline-block;
+  position: relative;
+  &:hover &-text {
+    display: inline-block;
+  }
+
+  &-ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  &-text {
+    position: absolute;
+    z-index: 10;
+    display: none;
+    color: @tooltip-color;
+    background-color: @tooltip-background-color;
+    padding: 4px 8px;
+    border-radius: 2px;
+    transition: all 0.3s;
+    word-break: break-all;
+    width: max-content;
+    &::after {
+      position: absolute;
+      z-index: 10;
+      content: '';
+      background-color: @tooltip-background-color;
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+    }
+  }
+
+  &-top {
+    top: 0;
+    left: 50%;
+    transform: translate3d(-50%, calc(-100% - @toolyip-distance), 0);
+    &::after {
+      bottom: 0;
+      left: 50%;
+      transform: translate3d(-50%, 50%, 0) rotateZ(45deg);
+    }
+  }
+  &-left {
+    top: 50%;
+    left: 0;
+    transform: translate3d(calc(-100% - @toolyip-distance), -50%, 0);
+    &::after {
+      top: 50%;
+      right: 0;
+      transform: translate3d(50%, -50%, 0) rotateZ(45deg);
+    }
+  }
+  &-right {
+    top: 50%;
+    right: 0;
+    transform: translate3d(calc(100% + @toolyip-distance), -50%, 0);
+    &::after {
+      top: 50%;
+      left: 0;
+      transform: translate3d(-50%, -50%, 0) rotateZ(45deg);
+    }
+  }
+  &-bottom {
+    bottom: 0;
+    left: 50%;
+    transform: translate3d(-50%, calc(100% + @toolyip-distance), 0);
+    &::after {
+      top: 0;
+      left: 50%;
+      transform: translate3d(-50%, -50%, 0) rotateZ(45deg);
+    }
+  }
+}
