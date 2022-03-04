@@ -1,0 +1,27 @@
+.b-table {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  tbody tr {
+    border-bottom: 1px solid #ebedf1;
+  }
+  th {
+    background-color: #f9fafb;
+    padding: 16px;
+    border-right: 1px solid #ebedf1;
+    &:last-child {
+      border-right: 0;
+    }
+  }
+  td {
+    padding: 16px;
+  }
+  tr {
+    transition: all 0.3s;
+  }
+  tr:hover {
+    background-color: #f9fafb;
+    cursor: pointer;
+  }
+}
