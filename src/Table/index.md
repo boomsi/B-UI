@@ -50,7 +50,15 @@ const data = [
   },
 ];
 
-export default () => <Table data={data} config={config} />;
+const onRow = {
+  onClick(e, item) {
+    console.log(item);
+  },
+};
+
+export default () => (
+  <Table data={data} config={config} rowKey="name" onRow={onRow} />
+);
 ```
 
 Border:
@@ -103,7 +111,7 @@ const data = [
   },
 ];
 
-export default () => <Table data={data} config={config} border />;
+export default () => <Table data={data} config={config} border rowKey="name" />;
 ```
 
 <API></API>
