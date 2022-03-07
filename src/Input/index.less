@@ -1,0 +1,28 @@
+@import '../_style/global.less';
+
+.b-input {
+  input {
+    margin-bottom: 2px;
+    padding: 8px;
+    border: 1px solid @input-border-color;
+    border-radius: 2px;
+    outline: 1px solid transparent;
+    transition: all 0.5s;
+
+    &:focus {
+      border-color: @input-active-border-color;
+      outline: 1px solid @input-active-border-outline-color;
+    }
+  }
+
+  .b-input-underline {
+    border-color: transparent;
+    border-bottom-color: @input-border-color;
+    outline: none;
+    &:focus {
+      border-color: transparent;
+      border-bottom-color: @input-active-border-color;
+      outline: none;
+    }
+  }
+}
