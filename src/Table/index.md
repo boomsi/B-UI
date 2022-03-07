@@ -52,7 +52,16 @@ const data = [
 
 const onRow = {
   onClick(e, item) {
-    console.log(item);
+    console.log('click');
+  },
+  onDoubleClick(e, item) {
+    console.log('double click');
+  },
+  onMouseEnter(e, item) {
+    console.log('mouse enter');
+  },
+  onMouseLeave(e, item) {
+    console.log('mouse leave');
   },
 };
 

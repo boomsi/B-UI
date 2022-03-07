@@ -30,6 +30,7 @@ interface IProps {
     [prop in IRowEvent]?: (
       e: React.MouseEvent<HTMLTableRowElement, MouseEvent>,
       item: Idata,
+      index: number,
     ) => void;
   };
   rowKey: string | ((data: Idata) => string);
@@ -49,20 +50,20 @@ const Table: React.FC<IProps> = ({ config, data, onRow, rowKey }) => {
   }
 
   function renderTd() {
-    return data.map((item: Idata) => {
+    return data.map((item: Idata, idx: number) => {
       const trKey = typeof rowKey === 'string' ? item[rowKey] : rowKey(item);
       // const events = onRow
       //   ? Object.assign(
-      //       Object.keys(onRow).map((eventName: IRowEvent) => ({
+      //       ...(Object.keys(onRow) as IRowEvent[]).map((eventName: IRowEvent) => ({
       //         [eventName]: (
       //           e: React.MouseEvent<HTMLTableRowElement, MouseEvent>,
-      //         ) => onRow[eventName]?.(e, item),
-      //       })),
+      //         ) => onRow[eventName]?.(e, item, idx),
+      //       }))
       //     )
       //   : {};
 
       return (
-        <tr key={trKey} onClick={(e) => onRow?.onClick?.(e, item)}>
+        <tr key={trKey}>
           {config.map(({ key, dataIndex, tdAlign = 'center', render }) => (
             <td key={key} style={{ textAlign: tdAlign }}>
               {render ? render(item[dataIndex], item) : item[dataIndex]}
