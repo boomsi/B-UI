@@ -19,6 +19,7 @@ yarn add boy-ui
 3. message
 4. Clock
 5. Tooltip
+6. Input
 
 ## Design
 
