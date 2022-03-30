@@ -125,15 +125,16 @@ const Clock: React.FC<IClockProps & typeof defaultProps> = function (props) {
   }
 
   function loopUpdate() {
-    setTimeout(() => {
-      nowTime();
-      loopUpdate();
-    }, 1000);
+    nowTime();
+    return setInterval(nowTime, 1000);
   }
 
   useEffect(() => {
-    nowTime();
-    loopUpdate();
+    const timer = loopUpdate();
+
+    return () => {
+      clearInterval(timer);
+    };
   }, []);
 
   function renderItem(range: number, id: string) {
