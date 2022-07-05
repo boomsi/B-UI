@@ -1,0 +1,64 @@
+@import '../_style/global.less';
+
+.b-input {
+  display: flex;
+  align-items: center;
+  input {
+    padding: 6px 11px;
+    border: 1px solid @input-border-color;
+    border-radius: 2px;
+    font-size: 14px;
+    outline: 1px solid transparent;
+    transition: all 0.5s;
+
+    &:focus {
+      border-color: @input-active-border-color;
+      outline: 1px solid @input-active-border-outline-color;
+    }
+  }
+
+  .b-prefix-block,
+  .b-suffix-block {
+    height: 30px;
+    width: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid @input-border-color;
+    flex-shrink: 0;
+    box-sizing: border-box;
+  }
+
+  .b-prefix-block {
+    border-right: 0;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
+  }
+  .b-prefix-border {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  .b-suffix-block {
+    border-left: 0;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
+  }
+  .b-suffix-border {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .b-input-underline {
+    border-color: transparent;
+    border-bottom-color: @input-border-color;
+    outline: none;
+    &:focus {
+      border-color: transparent;
+      border-bottom-color: @input-active-border-color;
+      outline: none;
+    }
+  }
+  .b-prefix-padding {
+    padding-left: 20px;
+  }
+}
