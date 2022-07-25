@@ -26,28 +26,28 @@ export default () => {
   return (
     <div style={layout}>
       <Tooltip text="Tooltip Top" style={{ gridColumn: '2/3' }}>
-        <Button ghost text="Tooltip Top" />
+        <Button btnType="ghost" text="Tooltip Top" />
       </Tooltip>
       <Tooltip
         text="Tooltip Left"
         position="left"
         style={{ gridColumn: '1/2' }}
       >
-        <Button ghost text="Tooltip Left" />
+        <Button btnType="ghost" text="Tooltip Left" />
       </Tooltip>
       <Tooltip
         text="Tooltip Right"
         position="right"
         style={{ gridColumn: '3/4' }}
       >
-        <Button ghost text="Tooltip Right" />
+        <Button btnType="ghost" text="Tooltip Right" />
       </Tooltip>
       <Tooltip
         text="Tooltip Bottom"
         position="bottom"
         style={{ gridColumn: '2/3' }}
       >
-        <Button ghost text="Tooltip Bottom" />
+        <Button btnType="ghost" text="Tooltip Bottom" />
       </Tooltip>
     </div>
   );

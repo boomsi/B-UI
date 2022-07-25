@@ -4,19 +4,20 @@ import Loading from '../_components/Loading';
 import './index.less';
 
 type SizeType = 'small' | 'default' | 'large';
-type ButtonType = 'submit' | 'button' | 'reset';
+type HtmlType = 'submit' | 'button' | 'reset';
+type ButtonType = 'ghost' | 'line' | 'normal';
 
 export interface IButtonProps {
   /** 按钮文本 */
   text: string;
   /** 按钮尺寸 */
   size?: SizeType;
-  /** 背景色是否透明 */
-  ghost?: boolean;
+  /** 按钮类型 */
+  btnType?: ButtonType;
   /** 按钮加载状态 */
   loading?: boolean;
   /** button 原生 type 值 */
-  htmlType?: ButtonType;
+  htmlType?: HtmlType;
   /** 防抖(ms) */
   debounce?: number;
   /** 点击事件 */
@@ -27,8 +28,16 @@ type ButtonProps = IButtonProps &
   Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'type' | 'onClick'>;
 
 const Button: React.FC<ButtonProps> = (props) => {
-  const { text, className, size, ghost, loading, debounce, onClick, ...rest } =
-    props;
+  const {
+    text,
+    className,
+    size,
+    btnType,
+    loading,
+    debounce,
+    onClick,
+    ...rest
+  } = props;
 
   // 默认值为0 实际存在4ms的间隔
   function debounceFunc(fn: Function) {
@@ -55,7 +64,8 @@ const Button: React.FC<ButtonProps> = (props) => {
     {
       'b-btn-sm': size === 'small',
       'b-btn-lg': size === 'large',
-      'b-btn-ghost': ghost,
+      'b-btn-type-ghost': btnType === 'ghost',
+      'b-btn-type-line': btnType === 'line',
     },
     className,
   );
@@ -66,7 +76,7 @@ const Button: React.FC<ButtonProps> = (props) => {
       {...(rest as ButtonProps)}
       onClick={debounceFunc(handleClick)}
     >
-      {loading && <Loading color={ghost ? '#555' : '#FFF'} />}
+      {loading && <Loading color={btnType !== 'normal' ? '#555' : '#FFF'} />}
       <span>{text}</span>
     </button>
   );
@@ -74,7 +84,7 @@ const Button: React.FC<ButtonProps> = (props) => {
 
 Button.defaultProps = {
   size: 'default',
-  ghost: false,
+  btnType: 'normal',
   text: 'Button',
   loading: false,
   debounce: 0,

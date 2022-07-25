@@ -141,7 +141,7 @@ const UploadBase: React.FC<IUploadProps> = (props) => {
       (type === 'drag' ? (
         <DraggerDefault />
       ) : (
-        <Button ghost text="click to upload" />
+        <Button btnType="ghost" text="click to upload" />
       ));
 
     const cls = classnames('b-upload-dragger', {

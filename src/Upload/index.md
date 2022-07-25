@@ -18,7 +18,7 @@ export default () => {
       showList
       onChange={onChange}
     >
-      <Button ghost text="Click to upload" />
+      <Button btnType="ghost" text="Click to upload" />
     </Upload>
   );
 };
@@ -59,7 +59,7 @@ export default () => {
       defaultFileList={filelist}
       onChange={onChange}
     >
-      <Button ghost text="Click to upload" />
+      <Button btnType="ghost" text="Click to upload" />
     </Upload>
   );
 };

@@ -6,8 +6,8 @@ Normal:
 import React from 'react';
 import { Button } from 'boy-ui';
 
-const mrStyle = { marginRight: '8px' };
-const mtStyle = { marginTop: '8px' };
+const mrStyle = { marginRight: '24px' };
+const mtStyle = { marginTop: '24px' };
 
 export default () => (
   <>
@@ -26,16 +26,36 @@ Ghost:
 import React from 'react';
 import { Button } from 'boy-ui';
 
-const mrStyle = { marginRight: '8px' };
-const mtStyle = { marginTop: '8px' };
+const mrStyle = { marginRight: '24px' };
+const mtStyle = { marginTop: '24px' };
 
 export default () => (
   <>
-    <Button style={mrStyle} text="Small" size="small" ghost />
-    <Button style={mrStyle} text="Default" ghost />
-    <Button text="Large" size="large" ghost />
+    <Button style={mrStyle} text="Small" size="small" btnType="ghost" />
+    <Button style={mrStyle} text="Default" btnType="ghost" />
+    <Button text="Large" size="large" btnType="ghost" />
     <br />
-    <Button style={mtStyle} text="Disabled" disabled ghost />
+    <Button style={mtStyle} text="Disabled" disabled btnType="ghost" />
+  </>
+);
+```
+
+Line:
+
+```tsx
+import React from 'react';
+import { Button } from 'boy-ui';
+
+const mrStyle = { marginRight: '24px' };
+const mtStyle = { marginTop: '24px' };
+
+export default () => (
+  <>
+    <Button style={mrStyle} text="Small" size="small" btnType="line" />
+    <Button style={mrStyle} text="Default" btnType="line" />
+    <Button text="Large" size="large" btnType="line" />
+    <br />
+    <Button style={mtStyle} text="Disabled" disabled btnType="line" />
   </>
 );
 ```
@@ -46,13 +66,14 @@ Loading:
 import React from 'react';
 import { Button } from 'boy-ui';
 
-const mrStyle = { marginRight: '8px' };
-const mtStyle = { marginTop: '8px' };
+const mrStyle = { marginRight: '24px' };
+const mtStyle = { marginTop: '24px' };
 
 export default () => (
   <>
     <Button style={mrStyle} text="Loading" loading />
-    <Button ghost text="Loading" loading />
+    <Button style={mrStyle} btnType="ghost" text="Loading" loading />
+    <Button style={mrStyle} btnType="line" text="Loading" loading />
   </>
 );
 ```
